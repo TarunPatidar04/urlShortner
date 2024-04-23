@@ -14,12 +14,36 @@ connectToMongoDB("mongodb://localhost:27017/short-url")
   .catch((err) => {
     console.log("mongodb error", err);
   });
+
+app.set("view engine", "ejs");
+
+app.get("/test", async (req, res) => {
+  const allUrl = await URL.find({});
+  return res.end(`
+  <html>
+  <head></head>
+  <body>
+  <col>
+  ${allUrl
+    .map(
+      (url) =>
+        `<li>${url.shortId} - ${url.redirectURL} - ${url.visitHistory.length}</li>`
+    )
+    .join(" ")}
+  </col>
+  
+  </body>
+  </html>
+  
+  `);
+});
+
 app.get("/", (req, res) => {
   res.send("This is url sorter");
 });
 
 app.use("/url", urlRoute);
-app.get("/:shortId", async (req, res) => {
+app.get("/url/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
   const entry = await URL.findOneAndUpdate(
     {
