@@ -13,7 +13,7 @@ async function handleGenerateNewShortURL(req, res) {
     redirectURL: body.url,
     visitHistory: [],
   });
-  return res.json({ id: shortID });
+  res.render("home", { id: shortID });
 }
 
 async function handleAnalytics(req, res) {
